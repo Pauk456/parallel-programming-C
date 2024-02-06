@@ -9,8 +9,9 @@ set(exe_name ${PROJECT_NAME})
 set(MPI_ROOT "C:\\Program Files (x86)\\Microsoft SDKs\\MPI")
 
 include_directories(${MPI_ROOT}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 link_directories(${MPI_ROOT}/Lib/x64)
 
-add_executable(${exe_name} main.c)
+add_executable(${exe_name} main.cpp src/Solving_Linear_Equations.cpp)
 target_link_libraries(${exe_name} msmpi.lib)
