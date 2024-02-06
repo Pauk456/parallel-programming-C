@@ -33,11 +33,3 @@ bool Solving_Linear_Equations_usual::accuracy_check(double epsilon) const
 	return norm_numerator / norm_denominator < epsilon ? true : false;
 }
 
-std::vector<double> Solving_Linear_Equations_usual::execute(double epsilon)
-{
-	while (accuracy_check(epsilon) == false)
-	{
-		proximity_function();
-	}
-	return x;
-}

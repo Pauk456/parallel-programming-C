@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+	MPI_Init(&argc, &argv);
 	int N = 50;
 	Matrix A(N);
 	std::vector<double> x(N, 0.0);

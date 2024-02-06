@@ -28,3 +28,13 @@ double Solving_Linear_Equations_virtual::find_norm(const std::vector<double>& ro
 	result = std::pow(result, 0.5);
 	return result;
 }
+
+
+std::vector<double> Solving_Linear_Equations_virtual::execute(double epsilon)
+{
+	while (accuracy_check(epsilon) == false)
+	{
+		proximity_function();
+	}
+	return x;
+}
