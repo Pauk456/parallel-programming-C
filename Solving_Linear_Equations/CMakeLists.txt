@@ -13,5 +13,5 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 link_directories(${MPI_ROOT}/Lib/x64)
 
-add_executable(${exe_name} main.cpp src/Solving_Linear_Equations_usual.cpp src/Matrix.cpp)
+add_executable(${exe_name} main.cpp src/Solving_Linear_Equations_usual.cpp src/Matrix.cpp src/Solving_Linear_Equations_virtual.cpp)
 target_link_libraries(${exe_name} msmpi.lib)
