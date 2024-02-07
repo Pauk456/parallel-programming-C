@@ -12,7 +12,6 @@ void Solving_Linear_Equations_usual::proximity_function()
 	{
 		new_x[i] = x[i] - ti_plus * (new_x[i] - b[i]);
 	}
-
 	x = new_x;
 }
 

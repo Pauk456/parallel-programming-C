@@ -32,8 +32,10 @@ double Solving_Linear_Equations_virtual::find_norm(const std::vector<double>& ro
 
 std::vector<double> Solving_Linear_Equations_virtual::execute(double epsilon)
 {
+	int i = 0;
 	while (accuracy_check(epsilon) == false)
 	{
+		i++;
 		proximity_function();
 	}
 	return x;

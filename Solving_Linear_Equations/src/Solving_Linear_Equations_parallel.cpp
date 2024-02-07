@@ -28,13 +28,13 @@ void Solving_Linear_Equations_parallel::proximity_function()
 		new_x = x_process;
 		if (size > 1)
 		{
-			MPI_Recv(&x_process + ibeg, x_process.size(), MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+			MPI_Recv(&new_x + ibeg, N, MPI_DOUBLE, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		}
 		x = new_x;
 	}
 	else
 	{
-		MPI_Send(&x_process, x_process.size(), MPI_DOUBLE, FIRST_THREAD, 0, MPI_COMM_WORLD);
+		MPI_Ssend(&x_process, x_process.size(), MPI_DOUBLE, FIRST_THREAD, 0, MPI_COMM_WORLD);
 	}
 }
 
@@ -52,5 +52,12 @@ bool Solving_Linear_Equations_parallel::accuracy_check(double epsilon) const
 	}
 
 	double norm_numerator = find_norm(result);
-	return norm_numerator / norm_denominator < epsilon ? true : false;
+	if (norm_numerator / norm_denominator < epsilon || norm_denominator / norm_numerator < epsilon)
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+	//return norm_numerator / norm_denominator < epsilon ? true : false;
 }

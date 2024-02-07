@@ -2,6 +2,7 @@
 #include<mpi.h>
 #include<vector>
 #include<cmath>
+#include <chrono>
 #include"Matrix.h"
 
 class Solving_Linear_Equations_virtual
