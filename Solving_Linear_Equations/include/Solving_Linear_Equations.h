@@ -6,7 +6,7 @@
 
 class Solving_Linear_Equations_virtual
 {
-private:
+protected:
 	static const double ti_plus;
 	static const double ti_minus;
 	int N;
@@ -25,7 +25,6 @@ public:
 	virtual ~Solving_Linear_Equations_virtual() = default;
 };
 
-
 class Solving_Linear_Equations_usual : public Solving_Linear_Equations_virtual
 {
 private:
@@ -39,6 +38,9 @@ public:
 class Solving_Linear_Equations_parallel : public Solving_Linear_Equations_virtual
 {
 private:
+	int argc;
+	char** argv;
+
 	void proximity_function() override;
 	bool accuracy_check(double epsilon) const override;
 public:

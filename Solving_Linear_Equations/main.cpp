@@ -12,10 +12,11 @@ int main(int argc, char* argv[])
 	std::vector<double> x(N, 0.0);
 	std::vector<double> b(N, N + 1);
 	std::vector<double> res(N);
-	Solving_Linear_Equations_usual test(A, x, b);
+	Solving_Linear_Equations_parallel test(A, x, b);
 	res = test.execute(0.00001);
 	for (int i = 0; i < N; i++)
 	{
 		std::cout << res[i] << ' ';
 	}
+	MPI_Finalize();
 }
