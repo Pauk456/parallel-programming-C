@@ -23,6 +23,7 @@ void Solving_Linear_Equations_parallel::proximity_function()
 		x_process[j] = x[i] - ti * (x_process[j] - b[i]);
 	}
 
+	int process_collector = 0;
 	if (rank == FIRST_THREAD)
 	{
 		for (int i = 0; i < count_for_process; i++)
@@ -40,22 +41,43 @@ void Solving_Linear_Equations_parallel::proximity_function()
 	}
 	else
 	{
-		MPI_Ssend(&x_process[0], x_process.size(), MPI_DOUBLE, FIRST_THREAD, 0, MPI_COMM_WORLD);
-		MPI_Recv(&x[0], x.size(), MPI_DOUBLE, 0, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Ssend(&x_process[0], x_process.size(), MPI_DOUBLE, process_collector, 0, MPI_COMM_WORLD);
+		MPI_Recv(&x[0], x.size(), MPI_DOUBLE, process_collector, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 }
 
 bool Solving_Linear_Equations_parallel::accuracy_check(double epsilon) const
 {
+	int size, rank;
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	int count_for_process = ceil((double)N / size);
+	int ibeg = count_for_process * rank;
+	int iend = count_for_process * (rank + 1) > N ? N : count_for_process * (rank + 1);
+
 	std::vector<double> result(N);
-	for (int i = 0; i < N; i++)
+	for (int i = ibeg; i < iend; i++)
 	{
 		result[i] = multiply_row_by_column(A[i], x);
-	}
-
-	for (int i = 0; i < N; i++)
-	{
 		result[i] = (result[i] - b[i]);
+	}
+	
+	int process_collector = size - 1;
+	if (rank == process_collector)
+	{
+		for (int i = 1; i < size; i++)
+		{
+			MPI_Recv(&result[i * count_for_process], count_for_process, MPI_DOUBLE, i, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		}
+		for (int i = 1; i < size; i++)
+		{
+			MPI_Ssend(&result[0], result.size(), MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
+		}
+	}
+	else
+	{
+		MPI_Ssend(&result[ibeg], iend - ibeg, MPI_DOUBLE, process_collector, 0, MPI_COMM_WORLD);
+		MPI_Recv(&result[0], result.size(), MPI_DOUBLE, process_collector, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 
 	double norm_numerator = find_norm(result);

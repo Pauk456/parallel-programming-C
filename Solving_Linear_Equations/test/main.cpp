@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 {
 	MPI_Init(&argc, &argv);
 	auto start_time = std::chrono::high_resolution_clock::now();
-	int N = 223;
+	int N = 5000;
 	Matrix A(N);
 	std::vector<double> x(N, 2.0);
 	std::vector<double> b(N, N + 1);
@@ -24,11 +24,10 @@ int main(int argc, char* argv[])
 	if (rank == 0)
 	{
 		std::cout << "Time passed: " << duration.count() << " micsec" << "rank:" << rank << std::endl;
-		for (int i = 0; i < N; i++)
-		{
-			std::cout << res[i] << ' ';
-		}
-		std::cout << std::endl;
+		//for (int i = 0; i < N; i++)
+		//{
+		//	std::cout << res[i] << ' ';
+		//}
+		//std::cout << std::endl;
 	}
-
 }
