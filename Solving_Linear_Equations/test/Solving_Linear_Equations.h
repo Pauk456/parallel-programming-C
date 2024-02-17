@@ -5,6 +5,8 @@
 #include <chrono>
 #include"Matrix.h"
 
+extern std::chrono::microseconds durationGLOBAL;
+
 class Solving_Linear_Equations_virtual
 {
 protected:
@@ -37,12 +39,25 @@ public:
 		: Solving_Linear_Equations_virtual(A, x, b) {};
 };
 
-class Solving_Linear_Equations_parallel : public Solving_Linear_Equations_virtual
+class Solving_Linear_Equations_parallel_first : public Solving_Linear_Equations_virtual
 {
 private:
 	void proximity_function() override;
 	bool accuracy_check(double epsilon) const override;
 public:
-	Solving_Linear_Equations_parallel(Matrix A, std::vector<double> x, std::vector<double> b)
+	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b)
 		: Solving_Linear_Equations_virtual(A, x, b) {};
 };
+//
+//class Solving_Linear_Equations_parallel_second : public Solving_Linear_Equations_virtual
+//{
+//private:
+//	void proximity_function() override;
+//	bool accuracy_check(double epsilon) const override;
+//	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int count) const;
+//public:
+//	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b)
+//		: Solving_Linear_Equations_virtual(A, x, b) {};
+//};
+
+

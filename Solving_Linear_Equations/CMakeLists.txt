@@ -18,6 +18,7 @@ add_executable(
 	src/Solving_Linear_Equations_usual.cpp 
 	src/Matrix.cpp 
 	src/Solving_Linear_Equations_virtual.cpp
-	src/Solving_Linear_Equations_parallel.cpp
+	src/Solving_Linear_Equations_parallel_first.cpp
+	src/Solving_Linear_Equations_parallel_second.cpp
 )
 target_link_libraries(${exe_name} msmpi.lib)

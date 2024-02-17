@@ -25,7 +25,7 @@ double Solving_Linear_Equations_virtual::find_norm(const std::vector<double>& ro
 	{
 		result += row[i] * row[i];
 	}
-	result = std::pow(result, 0.5);
+	//result = std::pow(result, 0.5);
 	return result;
 }
 

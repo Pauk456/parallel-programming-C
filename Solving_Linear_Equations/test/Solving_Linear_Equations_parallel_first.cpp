@@ -1,10 +1,12 @@
 #include "Solving_Linear_Equations.h"
-#include <iostream>
 
 #define FIRST_THREAD 0
 
-void Solving_Linear_Equations_parallel::proximity_function()
-{
+std::chrono::microseconds durationGLOBAL = std::chrono::microseconds(0);
+
+// Возможно можно увеличить производительность если process_collector = size - 1 
+void Solving_Linear_Equations_parallel_first::proximity_function()
+{ 
 	int size, rank;
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -26,6 +28,7 @@ void Solving_Linear_Equations_parallel::proximity_function()
 	int process_collector = 0;
 	if (rank == FIRST_THREAD)
 	{
+		auto start_time = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < count_for_process; i++)
 		{
 			x[i] = x_process[i];
@@ -38,6 +41,8 @@ void Solving_Linear_Equations_parallel::proximity_function()
 		{
 			MPI_Ssend(&x[0], x.size(), MPI_DOUBLE, i, 0, MPI_COMM_WORLD);
 		}
+		auto end_time = std::chrono::high_resolution_clock::now();
+		durationGLOBAL += std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 	}
 	else
 	{
@@ -46,7 +51,7 @@ void Solving_Linear_Equations_parallel::proximity_function()
 	}
 }
 
-bool Solving_Linear_Equations_parallel::accuracy_check(double epsilon) const
+bool Solving_Linear_Equations_parallel_first::accuracy_check(double epsilon) const
 { // Можно ли сделать так чтобы первый процесс который до сюда дошел стал process_collectorом?
 	int size, rank;
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -62,7 +67,7 @@ bool Solving_Linear_Equations_parallel::accuracy_check(double epsilon) const
 		result[i] = (result[i] - b[i]);
 	}
 	
-	int process_collector = size - 1;
+	int process_collector = 0;
 	if (rank == process_collector)
 	{
 		for (int i = 1; i < size; i++)
