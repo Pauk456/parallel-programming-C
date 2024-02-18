@@ -1,7 +1,7 @@
 #include "Solving_Linear_Equations.h"
 
-const double Solving_Linear_Equations_virtual::ti_plus = 0.0001;
-const double Solving_Linear_Equations_virtual::ti_minus = -0.0001;
+const double Solving_Linear_Equations_virtual::ti_plus = 0.00001;
+const double Solving_Linear_Equations_virtual::ti_minus = -0.00001;
 
 Solving_Linear_Equations_virtual::Solving_Linear_Equations_virtual(Matrix A, std::vector<double> x, std::vector<double> b)
 	: A(A), N(A.size()), x(x), b(b)
@@ -25,7 +25,7 @@ double Solving_Linear_Equations_virtual::find_norm(const std::vector<double>& ro
 	{
 		result += row[i] * row[i];
 	}
-	//result = std::pow(result, 0.5);
+	result = std::pow(result, 0.5);
 	return result;
 }
 

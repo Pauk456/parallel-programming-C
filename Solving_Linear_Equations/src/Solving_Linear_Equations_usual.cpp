@@ -15,7 +15,7 @@ void Solving_Linear_Equations_usual::proximity_function()
 	x = new_x;
 }
 
-bool Solving_Linear_Equations_usual::accuracy_check(double epsilon) const
+bool Solving_Linear_Equations_usual::accuracy_check(double epsilon)
 {
 	std::vector<double> result(N);
 	for (int i = 0; i < N; i++)
@@ -29,6 +29,6 @@ bool Solving_Linear_Equations_usual::accuracy_check(double epsilon) const
 	}
 
 	double norm_numerator = find_norm(result);
-	return norm_numerator / norm_denominator < epsilon * epsilon ? true : false;
+	return norm_numerator / norm_denominator < epsilon ? true : false;
 }
 

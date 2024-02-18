@@ -20,7 +20,7 @@ protected:
 	double norm_denominator = 0;
 
 	virtual void proximity_function() = 0;
-	virtual bool accuracy_check(double epsilon) const = 0;
+	virtual bool accuracy_check(double epsilon) = 0;
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column) const;
 	double find_norm(const std::vector<double>& row) const;
 public:
@@ -34,7 +34,7 @@ class Solving_Linear_Equations_usual : public Solving_Linear_Equations_virtual
 {
 private:
 	void proximity_function() override;
-	bool accuracy_check(double epsilon) const override;
+	bool accuracy_check(double epsilon) override;
 public:
 	Solving_Linear_Equations_usual(Matrix A, std::vector<double> x, std::vector<double> b) 
 		: Solving_Linear_Equations_virtual(A, x, b) {};
@@ -44,7 +44,7 @@ class Solving_Linear_Equations_parallel_first : public Solving_Linear_Equations_
 {
 private:
 	void proximity_function() override;
-	bool accuracy_check(double epsilon) const override;
+	bool accuracy_check(double epsilon) override;
 public:
 	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b)
 		: Solving_Linear_Equations_virtual(A, x, b) {};
@@ -53,12 +53,15 @@ public:
 class Solving_Linear_Equations_parallel_second : public Solving_Linear_Equations_virtual
 {
 private:
-	int size, rank, ibeg, iend, count_for_process;
+	int size, rank, ibeg, iend, count_for_process, destination, sender;
 
+	int find_norm_b();
 	void proximity_function() override;
-	bool accuracy_check(double epsilon) const override;
+	bool accuracy_check(double epsilon) override;
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const;
+	std::vector<double> build_res_vec();
 public:
 	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b);
+	std::vector<double> execute(double epsilon) override;
 };
 
