@@ -30,7 +30,7 @@ public:
 	virtual ~Solving_Linear_Equations_virtual() = default;
 
 	virtual void print_result() = 0;
-	virtual std::vector<double> execute(double epsilon);
+	virtual void execute(double epsilon);
 };
 
 class Solving_Linear_Equations_usual : public Solving_Linear_Equations_virtual
@@ -67,12 +67,10 @@ private:
 	void proximity_function() override;
 	bool accuracy_check(double epsilon) override;
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const;
-	std::vector<double> build_res_vec();
 public:
 	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
 	virtual ~Solving_Linear_Equations_parallel_second();
 
-	std::vector<double> execute(double epsilon) override;
 	void print_result() override;
 };
 

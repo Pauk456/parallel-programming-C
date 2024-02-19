@@ -118,28 +118,15 @@ bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 	return norm_numerator / norm_denominator < epsilon * epsilon ? true : false;
 }
 
-std::vector<double> Solving_Linear_Equations_parallel_second::build_res_vec()
-{
-	std::vector<double> res_vec(N);
-	MPI_Gather(&x[0], count_for_process, MPI_DOUBLE, &res_vec, count_for_process, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	return res_vec;
-}
-
-std::vector<double> Solving_Linear_Equations_parallel_second::execute(double epsilon)
-{
-	while (accuracy_check(epsilon) == false)
-	{
-		proximity_function();
-	}
-	return build_res_vec();
-}
-
 void Solving_Linear_Equations_parallel_second::print_result()
 {
 	int global_x_size = 0;
 	int part_x_size = x.size();
 	MPI_Allreduce(&part_x_size, &global_x_size, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-	std::cout << "Count of elements X = " << global_x_size << std::endl;
+	if (rank == 0)
+	{
+		std::cout << "Count of elements X = " << global_x_size << std::endl;
+	}
 	for (int i = 0; i < size; i++)
 	{
 		MPI_Barrier(MPI_COMM_WORLD);
@@ -151,5 +138,8 @@ void Solving_Linear_Equations_parallel_second::print_result()
 			}
 		}
 	}
-	std::cout << std::endl;
+	if (rank == 0)
+	{
+		std::cout << std::endl;
+	}
 }

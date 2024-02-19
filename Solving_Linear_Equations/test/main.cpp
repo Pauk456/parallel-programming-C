@@ -6,6 +6,7 @@
 
 int main(int argc, char* argv[])
 {
+	MPI_Init(&argc, &argv);
 	auto start_time = std::chrono::high_resolution_clock::now();
 
 	int N = 16;
@@ -27,4 +28,5 @@ int main(int argc, char* argv[])
 	auto end_time = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end_time - start_time);
 	std::cout << "Time passed: " << duration.count() << " micsec" << std::endl;
+	MPI_Finalize();
 }
