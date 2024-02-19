@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
 	MPI_Init(&argc, &argv);
 	auto start_time = std::chrono::high_resolution_clock::now();
-	int N = 500;
+	int N = 16;
 	Matrix A(N);
 	std::vector<double> x(N, 2.0);
 	std::vector<double> b(N, N + 1);

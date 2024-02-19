@@ -73,6 +73,7 @@ void Solving_Linear_Equations_parallel_second::proximity_function()
 	{
 		x_process[i] = x[i] - ti * (x_process[i] - b[i]);
 	}
+
 	x = x_process;
 }
 
@@ -114,23 +115,9 @@ bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 
 std::vector<double> Solving_Linear_Equations_parallel_second::build_res_vec()
 {
+	if (size == 1) return x;
 	std::vector<double> res_vec(N);
-	std::vector<double> tmp(count_for_process);
-	for (int k = 0, i = 0; k < size; k++)
-	{
-		for (int j = 0; j < count_for_process; j++, i++)
-		{
-			res_vec[i] = x[j];
-		}
-
-		if (size == 1) continue;
-
-		MPI_Sendrecv(&x[0], count_for_process, MPI_DOUBLE, destination, 0,
-			&tmp[0], count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
-			MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-
-		x = tmp;
-	}
+	MPI_Gather(&x[0], count_for_process, MPI_DOUBLE, &res_vec, N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	return res_vec;
 }
 
