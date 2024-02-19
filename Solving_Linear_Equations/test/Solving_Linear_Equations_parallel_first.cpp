@@ -6,6 +6,7 @@
 Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
 	: Solving_Linear_Equations_virtual(A, x, b)
 {
+	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -23,7 +24,7 @@ Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first
 
 Solving_Linear_Equations_parallel_first::~Solving_Linear_Equations_parallel_first()
 {
-	//MPI_Finalize();
+	MPI_Finalize();
 }
 
 void Solving_Linear_Equations_parallel_first::proximity_function()

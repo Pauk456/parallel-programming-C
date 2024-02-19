@@ -5,7 +5,7 @@
 Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
 : Solving_Linear_Equations_virtual(A)
 {
-	//MPI_Init(&argc, &argv);
+	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
@@ -35,14 +35,14 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 
 Solving_Linear_Equations_parallel_second::~Solving_Linear_Equations_parallel_second()
 {
-	//MPI_Finalize();
+	MPI_Finalize();
 }
 
 int Solving_Linear_Equations_parallel_second::find_norm_b()
 {
 	double sum_part = 0;
 	double sum = 0;
-	for (int i = ibeg; i < iend; i++)
+	for (int i = 0; i < count_for_process; i++)
 	{
 		sum_part += b[i] * b[i];
 	}
@@ -53,7 +53,7 @@ int Solving_Linear_Equations_parallel_second::find_norm_b()
 double Solving_Linear_Equations_parallel_second::multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const
 {
 	double result = 0.0;
-	for (int i = offset, j = 0; j < offset + count; i++, j++) {
+	for (int i = offset, j = 0; i < offset + count; i++, j++) {
 		result += row[i] * column[j];
 	}
 	return result;
