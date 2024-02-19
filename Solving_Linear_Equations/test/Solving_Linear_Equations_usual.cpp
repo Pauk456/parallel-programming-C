@@ -32,3 +32,12 @@ bool Solving_Linear_Equations_usual::accuracy_check(double epsilon)
 	return norm_numerator / norm_denominator < epsilon ? true : false;
 }
 
+void Solving_Linear_Equations_usual::print_result()
+{
+	std::cout << "Count of elements X = " << x.size() << std::endl;
+	for (int i = 0; i < x.size(); i++)
+	{
+		std::cout << x[i] << ' ';
+	}
+	std::cout << std::endl;
+}

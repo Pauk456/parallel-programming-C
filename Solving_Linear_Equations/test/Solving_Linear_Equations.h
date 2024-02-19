@@ -1,5 +1,6 @@
 #pragma once
 #include<mpi.h>
+#include<iostream>
 #include<vector>
 #include<cmath>
 #include <chrono>
@@ -27,6 +28,8 @@ public:
 	Solving_Linear_Equations_virtual(Matrix A) : A(A), N(A.size()) {};
 	Solving_Linear_Equations_virtual(Matrix A, std::vector<double> x, std::vector<double> b);
 	virtual ~Solving_Linear_Equations_virtual() = default;
+
+	virtual void print_result() = 0;
 	virtual std::vector<double> execute(double epsilon);
 };
 
@@ -38,16 +41,21 @@ private:
 public:
 	Solving_Linear_Equations_usual(Matrix A, std::vector<double> x, std::vector<double> b) 
 		: Solving_Linear_Equations_virtual(A, x, b) {};
+
+	void print_result() override;
 };
 
 class Solving_Linear_Equations_parallel_first : public Solving_Linear_Equations_virtual
 {
 private:
+	int size, rank, ibeg, iend, count_for_process;
 	void proximity_function() override;
 	bool accuracy_check(double epsilon) override;
 public:
-	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b)
-		: Solving_Linear_Equations_virtual(A, x, b) {};
+	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
+	virtual ~Solving_Linear_Equations_parallel_first();
+
+	void print_result() override;
 };
 
 class Solving_Linear_Equations_parallel_second : public Solving_Linear_Equations_virtual
@@ -61,7 +69,10 @@ private:
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const;
 	std::vector<double> build_res_vec();
 public:
-	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b);
+	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
+	virtual ~Solving_Linear_Equations_parallel_second();
+
 	std::vector<double> execute(double epsilon) override;
+	void print_result() override;
 };
 
