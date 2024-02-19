@@ -1,0 +1,12 @@
+
+main:622 terminated with signal 11 at PC=7f8dbf4f93fe SP=7fff5d1ef880.  Backtrace:
+/lib/x86_64-linux-gnu/libc.so.6(free+0x1e)[0x7f8dbf4f93fe]
+./main(+0x3baf)[0x5645907a0baf]
+./main(+0x37f7)[0x5645907a07f7]
+./main(+0x3388)[0x5645907a0388]
+./main(+0x2dfc)[0x56459079fdfc]
+./main(+0x2e4d)[0x56459079fe4d]
+./main(+0x29c6)[0x56459079f9c6]
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f8dbf47dd90]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f8dbf47de40]
+./main(+0x2525)[0x56459079f525]

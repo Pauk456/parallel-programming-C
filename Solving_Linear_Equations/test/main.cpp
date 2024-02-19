@@ -8,14 +8,14 @@ int main(int argc, char* argv[])
 {
 	auto start_time = std::chrono::high_resolution_clock::now();
 
-	int N = 17;
+	int N = 16;
 	
 	Matrix A(N);
 	std::vector<double> x(N, 2.0);
 	std::vector<double> b(N, N + 1);
 
 	try {
-		Solving_Linear_Equations_parallel_first solver(A, x, b, argc, argv);
+		Solving_Linear_Equations_parallel_second solver(A, x, b, argc, argv);
 		solver.execute(0.0001);
 		solver.print_result();
 	}

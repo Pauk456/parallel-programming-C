@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 	std::vector<double> b(N, N + 1);
 
 	try {
-		Solving_Linear_Equations_parallel_first solver(A, x, b, argc, argv);
+		Solving_Linear_Equations_parallel_second solver(A, x, b, argc, argv);
 		solver.execute(0.0001);
 		solver.print_result();
 	}
