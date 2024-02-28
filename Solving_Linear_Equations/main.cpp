@@ -6,6 +6,8 @@
 
 int main(int argc, char* argv[])
 {
+	MPI_Init(&argc, &argv);
+
 	int N = 1000;
 
 	Matrix A(N);
@@ -27,4 +29,6 @@ int main(int argc, char* argv[])
 	{
 		std::cout << e.what() << std::endl;
 	}
+	
+	MPI_Finalize();
 }

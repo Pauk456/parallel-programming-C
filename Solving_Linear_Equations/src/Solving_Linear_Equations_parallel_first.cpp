@@ -6,13 +6,14 @@
 Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
 	: Solving_Linear_Equations_virtual(A, x, b)
 {
-	MPI_Init(&argc, &argv);
+	std::vector<double> result_part(count_for_process);
+	std::vector<double> result(N);
+
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	if (size == 1)
 	{
-		MPI_Finalize();
 		throw std::runtime_error("Error: size is 1");
 	}
 
@@ -21,11 +22,6 @@ Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first
 	iend = count_for_process * (rank + 1) > N ? N : count_for_process * (rank + 1);
 	count_for_process = iend - ibeg;
 };
-
-Solving_Linear_Equations_parallel_first::~Solving_Linear_Equations_parallel_first()
-{
-	MPI_Finalize();
-}
 
 void Solving_Linear_Equations_parallel_first::proximity_function()
 { 
@@ -55,8 +51,6 @@ void Solving_Linear_Equations_parallel_first::proximity_function()
 
 bool Solving_Linear_Equations_parallel_first::accuracy_check(double epsilon)
 {
-	std::vector<double> result_part(count_for_process);
-	std::vector<double> result(N);
 	for (int i = ibeg, j = 0; i < iend; i++, j++)
 	{
 		result_part[j] = multiply_row_by_column(A[i], x) - b[i];

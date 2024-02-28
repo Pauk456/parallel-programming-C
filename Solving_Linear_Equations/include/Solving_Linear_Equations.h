@@ -53,7 +53,6 @@ private:
 	bool accuracy_check(double epsilon) override;
 public:
 	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
-	virtual ~Solving_Linear_Equations_parallel_first();
 
 	void print_result() override;
 };
@@ -69,7 +68,6 @@ private:
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const;
 public:
 	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
-	virtual ~Solving_Linear_Equations_parallel_second();
 
 	void print_result() override;
 };

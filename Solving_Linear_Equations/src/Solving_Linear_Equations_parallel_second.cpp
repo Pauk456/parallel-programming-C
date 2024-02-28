@@ -5,13 +5,11 @@
 Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
 : Solving_Linear_Equations_virtual(A)
 {
-	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	if (size == 1)
 	{
-		MPI_Finalize();
 		throw std::runtime_error("Error: size is 1");
 	}
 
@@ -25,6 +23,9 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 
 	this->x.resize(count_for_process);
 	this->b.resize(count_for_process);
+	std::vector<double> x_process(count_for_process, 0.0);
+	std::vector<double> result(count_for_process, 0.0);
+	std::vector<double> tmp(count_for_process);
 	for (int i = ibeg, j = 0; i < iend; i++, j++)
 	{
 		this->x[j] = x[i];
@@ -32,11 +33,6 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 	}
 	norm_denominator = find_norm_b();
 };
-
-Solving_Linear_Equations_parallel_second::~Solving_Linear_Equations_parallel_second()
-{
-	MPI_Finalize();
-}
 
 int Solving_Linear_Equations_parallel_second::find_norm_b()
 {
@@ -61,8 +57,6 @@ double Solving_Linear_Equations_parallel_second::multiply_row_by_column(const st
 
 void Solving_Linear_Equations_parallel_second::proximity_function()
 {
-	std::vector<double> x_process(count_for_process, 0.0);
-	std::vector<double> tmp(count_for_process);
 	for (int k = 0; k < size; k++)
 	{
 		int block = (rank + k) % size;
@@ -87,8 +81,6 @@ void Solving_Linear_Equations_parallel_second::proximity_function()
 
 bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 { 
-	std::vector<double> result(count_for_process, 0.0);
-	std::vector<double> tmp(count_for_process);
 	for (int k = 0; k < size; k++)
 	{
 		int block = (rank + k) % size;
