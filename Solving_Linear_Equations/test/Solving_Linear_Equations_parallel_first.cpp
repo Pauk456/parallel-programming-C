@@ -1,31 +1,25 @@
 #include "Solving_Linear_Equations.h"
 #include<mpi.h>
 
-#define FIRST_THREAD 0
-
-Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
+Solving_Linear_Equations_parallel_first::Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b)
 	: Solving_Linear_Equations_virtual(A, x, b)
 {
-	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	if (size == 1)
+	if (N % size != 0)
 	{
-		MPI_Finalize();
-		throw std::runtime_error("Error: size is 1");
+		throw std::runtime_error("Error: N % size is not 0");
 	}
 
 	count_for_process = ceil((double)N / size);
 	ibeg = count_for_process * rank;
 	iend = count_for_process * (rank + 1) > N ? N : count_for_process * (rank + 1);
 	count_for_process = iend - ibeg;
-};
 
-Solving_Linear_Equations_parallel_first::~Solving_Linear_Equations_parallel_first()
-{
-	MPI_Finalize();
-}
+	result_part.resize(count_for_process);
+	result.resize(N);
+};
 
 void Solving_Linear_Equations_parallel_first::proximity_function()
 { 
@@ -34,10 +28,11 @@ void Solving_Linear_Equations_parallel_first::proximity_function()
 		x[i] = x[i] - ti * (multiply_row_by_column(A[i], x) - b[i]);
 	}
 
+	//MPI_Allgather(&x[ibeg], count_for_process, MPI_DOUBLE, &x[0], count_for_process, MPI_DOUBLE, MPI_ANY_TAG);
 	int process_collector = 0;
-	if (rank == FIRST_THREAD)
+	if (rank == process_collector)
 	{
-		for(int i = 1; i < size; i++)
+		for (int i = 1; i < size; i++)
 		{
 			MPI_Recv(&x[i * count_for_process], count_for_process, MPI_DOUBLE, i, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		}
@@ -55,18 +50,15 @@ void Solving_Linear_Equations_parallel_first::proximity_function()
 
 bool Solving_Linear_Equations_parallel_first::accuracy_check(double epsilon)
 {
-	std::vector<double> result_part(count_for_process);
-	std::vector<double> result(N);
 	for (int i = ibeg, j = 0; i < iend; i++, j++)
 	{
 		result_part[j] = multiply_row_by_column(A[i], x) - b[i];
 	}
 
-	MPI_Gather(result_part.data(), count_for_process, MPI_DOUBLE, result.data(), count_for_process, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(result.data(), N, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+	MPI_Allgather(result_part.data(), count_for_process, MPI_DOUBLE, result.data(), count_for_process, MPI_DOUBLE, MPI_COMM_WORLD);
 
 	double norm_numerator = find_norm(result);
-	return norm_numerator / norm_denominator < epsilon ? true : false;
+	return norm_numerator / norm_denominator < epsilon;
 }
 
 void Solving_Linear_Equations_parallel_first::print_result()

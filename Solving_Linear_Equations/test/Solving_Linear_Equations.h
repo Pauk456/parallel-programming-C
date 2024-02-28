@@ -48,12 +48,14 @@ public:
 class Solving_Linear_Equations_parallel_first : public Solving_Linear_Equations_virtual
 {
 private:
+	std::vector<double> result_part;
+	std::vector<double> result;
+
 	int size, rank, ibeg, iend, count_for_process;
 	void proximity_function() override;
 	bool accuracy_check(double epsilon) override;
 public:
-	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
-	virtual ~Solving_Linear_Equations_parallel_first();
+	Solving_Linear_Equations_parallel_first(Matrix A, std::vector<double> x, std::vector<double> b);
 
 	void print_result() override;
 };
@@ -61,6 +63,9 @@ public:
 class Solving_Linear_Equations_parallel_second : public Solving_Linear_Equations_virtual
 {
 private:
+	std::vector<double> x_process;
+	std::vector<double> result;
+
 	int size, rank, ibeg, iend, count_for_process, destination, sender;
 
 	int find_norm_b();
@@ -68,8 +73,7 @@ private:
 	bool accuracy_check(double epsilon) override;
 	double multiply_row_by_column(const std::vector<double>& row, const std::vector<double>& column, int offset, int count) const;
 public:
-	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv);
-	virtual ~Solving_Linear_Equations_parallel_second();
+	Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b);
 
 	void print_result() override;
 };

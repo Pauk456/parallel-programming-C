@@ -2,17 +2,15 @@
 
 #define FIRST_THREAD 0
 
-Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b, int argc, char** argv)
+Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_second(Matrix A, std::vector<double> x, std::vector<double> b)
 : Solving_Linear_Equations_virtual(A)
 {
-	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	if (size == 1)
+	if (N % size != 0)
 	{
-		MPI_Finalize();
-		throw std::runtime_error("Error: size is 1");
+		throw std::runtime_error("Error: N % size is not 0");
 	}
 
 	count_for_process = ceil((double)N / size);
@@ -25,6 +23,8 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 
 	this->x.resize(count_for_process);
 	this->b.resize(count_for_process);
+	x_process.resize(count_for_process, 0.0);
+	result.resize(count_for_process, 0.0);
 	for (int i = ibeg, j = 0; i < iend; i++, j++)
 	{
 		this->x[j] = x[i];
@@ -33,16 +33,11 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 	norm_denominator = find_norm_b();
 };
 
-Solving_Linear_Equations_parallel_second::~Solving_Linear_Equations_parallel_second()
-{
-	MPI_Finalize();
-}
-
 int Solving_Linear_Equations_parallel_second::find_norm_b()
 {
 	double sum_part = 0;
 	double sum = 0;
-	for (int i = 0; i < count_for_process; i++)
+	for (int i = ibeg; i < iend; i++)
 	{
 		sum_part += b[i] * b[i];
 	}
@@ -61,8 +56,6 @@ double Solving_Linear_Equations_parallel_second::multiply_row_by_column(const st
 
 void Solving_Linear_Equations_parallel_second::proximity_function()
 {
-	std::vector<double> x_process(count_for_process, 0.0);
-	std::vector<double> tmp(count_for_process);
 	for (int k = 0; k < size; k++)
 	{
 		int block = (rank + k) % size;
@@ -71,7 +64,9 @@ void Solving_Linear_Equations_parallel_second::proximity_function()
 		{
 			x_process[j] += multiply_row_by_column(A[i], x, block * count_for_process, count_for_process);
 		}
-		
+
+		//MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		std::vector<double> tmp(count_for_process);
 		MPI_Sendrecv(&x[0], count_for_process, MPI_DOUBLE, destination, 0,
 			&tmp[0], count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
 			MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -87,8 +82,6 @@ void Solving_Linear_Equations_parallel_second::proximity_function()
 
 bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 { 
-	std::vector<double> result(count_for_process, 0.0);
-	std::vector<double> tmp(count_for_process);
 	for (int k = 0; k < size; k++)
 	{
 		int block = (rank + k) % size;
@@ -97,12 +90,13 @@ bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 		{
 			result[j] += multiply_row_by_column(A[i], x, block * count_for_process, count_for_process);
 		}
-
+		std::vector<double> tmp(count_for_process);
 		MPI_Sendrecv(x.data(), count_for_process, MPI_DOUBLE, destination, 0,
 			tmp.data(), count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
 			MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
 		x = tmp;
+		//MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 
 	double part_norm = 0;
