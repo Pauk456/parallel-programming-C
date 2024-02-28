@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	int N = 200;
+	int N = 100;
 
 	Matrix A(N);
 	std::vector<double> x(N, 0);
@@ -27,8 +27,8 @@ int main(int argc, char* argv[])
 		if (rank == 0)
 		{
 			std::cout << "Time passed: " << duration.count() << " micsec" << std::endl;
-			solver.print_result();
-		}	
+		}
+		solver.print_result();
 	}
 	catch (const std::exception& e)
 	{
