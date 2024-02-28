@@ -65,7 +65,6 @@ class Solving_Linear_Equations_parallel_second : public Solving_Linear_Equations
 private:
 	std::vector<double> x_process;
 	std::vector<double> result;
-	std::vector<double> tmp;
 
 	int size, rank, ibeg, iend, count_for_process, destination, sender;
 

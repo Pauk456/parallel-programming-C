@@ -25,7 +25,6 @@ Solving_Linear_Equations_parallel_second::Solving_Linear_Equations_parallel_seco
 	this->b.resize(count_for_process);
 	x_process.resize(count_for_process, 0.0);
 	result.resize(count_for_process, 0.0);
-	tmp.resize(count_for_process);
 	for (int i = ibeg, j = 0; i < iend; i++, j++)
 	{
 		this->x[j] = x[i];
