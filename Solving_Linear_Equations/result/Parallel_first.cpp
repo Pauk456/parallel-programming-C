@@ -2,6 +2,7 @@
 #include<vector>
 #include<iostream>
 #include<chrono>
+#include<cmath>
 
 class Matrix
 {
