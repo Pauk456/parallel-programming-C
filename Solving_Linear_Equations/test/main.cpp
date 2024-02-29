@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	int N = 100;
+	int N = 1000;
 
 	Matrix A(N);
 	std::vector<double> x(N, 0);

@@ -20,5 +20,5 @@ add_executable(
 	src/Solving_Linear_Equations_virtual.cpp
 	src/Solving_Linear_Equations_parallel_first.cpp
 	src/Solving_Linear_Equations_parallel_second.cpp
-)
+ "result/Parallel_first.cpp" "result/Parallel_second.cpp" "result/usual.cpp")
 target_link_libraries(${exe_name} msmpi.lib)

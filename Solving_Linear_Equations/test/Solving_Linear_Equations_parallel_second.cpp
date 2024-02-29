@@ -67,12 +67,12 @@ void Solving_Linear_Equations_parallel_second::proximity_function()
 			x_process[j] += multiply_row_by_column(A[i], x, block * count_for_process, count_for_process);
 		}
 
-		//MPI_Sendrecv(&x[0], count_for_process, MPI_DOUBLE, destination, 0,
-		//	&tmp[0], count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
-		//	MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		MPI_Sendrecv(&x[0], count_for_process, MPI_DOUBLE, destination, 0,
+			&tmp[0], count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
+			MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-		//x = tmp;
-		MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		x = tmp;
+		//MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 
 	for (int i = 0; i < count_for_process; i++)
@@ -92,13 +92,12 @@ bool Solving_Linear_Equations_parallel_second::accuracy_check(double epsilon)
 		{
 			result[j] += multiply_row_by_column(A[i], x, block * count_for_process, count_for_process);
 		}
-
-		/*MPI_Sendrecv(x.data(), count_for_process, MPI_DOUBLE, destination, 0,
+		MPI_Sendrecv(x.data(), count_for_process, MPI_DOUBLE, destination, 0,
 			tmp.data(), count_for_process, MPI_DOUBLE, sender, MPI_ANY_TAG,
 			MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-		x = tmp;*/
-		MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		x = tmp;
+		//MPI_Sendrecv_replace(&x[0], count_for_process, MPI_DOUBLE, destination, 0, sender, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 	}
 
 	double part_norm = 0;
