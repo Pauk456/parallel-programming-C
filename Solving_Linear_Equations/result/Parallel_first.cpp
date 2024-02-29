@@ -10,6 +10,7 @@ private:
 	std::vector< std::vector<double> > matrix;
 	int N;
 public:
+	Matrix();
 	Matrix(int N);
 
 	int size() {
@@ -22,9 +23,9 @@ public:
 Matrix::Matrix(int size) : N(size)
 {
 	matrix.resize(N, std::vector<double>(N, 1.0));
-	for (int i = 0; i < matrix.size(); i++)
+	for (size_t i = 0; i < matrix.size(); i++)
 	{
-		for (int j = 0; j < matrix.size(); j++)
+		for (size_t j = 0; j < matrix.size(); j++)
 		{
 			if (i == j)
 			{
@@ -48,10 +49,10 @@ protected:
 	double ti = ti_plus;
 	static const double ti_plus;
 	static const double ti_minus;
-	int N;
 	Matrix A;
-	std::vector<double> b;
+	int N;
 	std::vector<double> x;
+	std::vector<double> b;
 	double norm_denominator = 0;
 
 	virtual void proximity_function() = 0;
@@ -103,7 +104,7 @@ double Solving_Linear_Equations_virtual::multiply_row_by_column(const std::vecto
 double Solving_Linear_Equations_virtual::find_norm(const std::vector<double>& row) const
 {
 	double result = 0.0;
-	for (int i = 0; i < row.size(); i++)
+	for (size_t i = 0; i < row.size(); i++)
 	{
 		result += row[i] * row[i];
 	}
@@ -184,7 +185,7 @@ void Solving_Linear_Equations_parallel_first::print_result()
 	if (rank == 0)
 	{
 		std::cout << "Count of elements X = " << x.size() << std::endl;
-		for (int i = 0; i < x.size(); i++)
+		for (size_t i = 0; i < x.size(); i++)
 		{
 			std::cout << x[i] << ' ';
 		}
