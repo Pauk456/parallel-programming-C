@@ -83,8 +83,8 @@ public:
 	void print_result() override;
 };
 
-const double Solving_Linear_Equations_virtual::ti_plus = 0.00001;
-const double Solving_Linear_Equations_virtual::ti_minus = -0.00001;
+const double Solving_Linear_Equations_virtual::ti_plus = 0.000001;
+const double Solving_Linear_Equations_virtual::ti_minus = -0.000001;
 
 Solving_Linear_Equations_virtual::Solving_Linear_Equations_virtual(Matrix A, std::vector<double> x, std::vector<double> b)
 	: A(A), N(A.size()), x(x), b(b)
@@ -200,7 +200,7 @@ int main(int argc, char* argv[])
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	int N = 1000;
+	int N = 1280;
 
 	Matrix A(N);
 	std::vector<double> x(N, 0);
@@ -216,9 +216,9 @@ int main(int argc, char* argv[])
 		if (rank == 0)
 		{
 			std::cout << "Time passed: " << duration.count() << " micsec" << std::endl;
-			solver.print_result();
+			//solver.print_result();
 		}
-		
+
 	}
 	catch (const std::exception& e)
 	{
@@ -227,4 +227,5 @@ int main(int argc, char* argv[])
 
 	MPI_Finalize();
 }
+
 
