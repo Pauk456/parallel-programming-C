@@ -119,12 +119,12 @@ int main(int argc, char* argv[])
 		for (int i = 0; i < N; i++) {
 			result[i] = multiply_row_by_column(A[i], x1) - b[i];
 		}
-#pragma omp parallel for
+#pragma omp parallel for reduction(+:res)
 		for (int i = 0; i < N; i++) {
 			res += result[i] * result[i];
 		}
 
-#pragma omp for 
+#pragma omp for reduction(+:b_norm)
 		for (int i = 0; i < b.size(); i++) {
 			b_norm += b[i] * b[i];
 		}
